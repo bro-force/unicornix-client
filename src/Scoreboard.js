@@ -1,6 +1,11 @@
 import React from 'react'
+import { Motion, spring } from 'react-motion'
 
 import './styles/scoreboard.css'
+
+const animationConfig = {
+  stiffness: 1000,
+}
 
 const Scoreboard = props => {
   const timeInSeconds = props.time / 1000
@@ -14,7 +19,19 @@ const Scoreboard = props => {
   return (
     <div className="scoreboard">
       <h2 className="scoreboard__time">{ minutesDisplay }:{ secondsDisplay }</h2>
-      <div className="scoreboard__score">Pontuação: 100</div>
+      <Motion
+        defaultStyle={{ points: props.previousPoints }}
+        style={{ points: spring(props.points, animationConfig) }}
+      >
+        {({ points }) => {
+          return (
+            <React.Fragment>
+              <div className="scoreboard__score">Pontuação: { Math.floor(points) }</div>
+              <div className="scoreboard__combo">Combo: { props.combo }</div>
+            </React.Fragment>
+          )
+        }}
+      </Motion>
     </div>
   )
 }

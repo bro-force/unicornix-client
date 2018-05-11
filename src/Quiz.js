@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {
+  Motion,
   StaggeredMotion,
   spring
 } from 'react-motion'
@@ -15,6 +16,10 @@ const identifiers = [ 'A', 'B', 'C', 'D' ]
 const animationConfig = {
   stiffness: 1000,
   damping: 100
+}
+
+const pointsSpringConfig = {
+  stiffness: 1000
 }
 
 const Quiz = props => {
@@ -39,6 +44,9 @@ const Quiz = props => {
       <div className="quiz__main">
         <Scoreboard
           time={props.time}
+          points={props.points}
+          previousPoints={props.previousPoints}
+          combo={props.combo}
         />
         <blockquote className="quiz__quote">
           <p className="quiz__commentary">
@@ -48,6 +56,28 @@ const Quiz = props => {
       </div>
 
       <div className="quiz__answers">
+        <Motion
+          defaultStyle={{ points: props.previousPoints }}
+          style={{ points: spring(props.points, pointsSpringConfig) }}
+        >
+          {({ points }) => {
+            const newPoints = props.points - props.previousPoints
+            const remainingPoints = props.points - points
+            const canDisplay = points !== props.points
+
+            return (
+              <span
+                className="quiz__new-points"
+                style={{
+                  transform: `scale(${ points / props.points })`,
+                  display: canDisplay ? 'block' : 'none'
+                }}
+              >
+                +{ newPoints }
+              </span>
+            )
+          }}
+        </Motion>
         <StaggeredMotion
           defaultStyles={[
             { scale: props.time === minutes(15) ? 0 : 1 },

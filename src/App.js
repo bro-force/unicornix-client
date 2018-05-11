@@ -35,7 +35,10 @@ class App extends Component {
     answers: [],
     started: false,
     finished: false,
-    paused: false
+    paused: false,
+    combo: 0,
+    points: 0,
+    previousPoints: 0
   }
 
   get hasNextQuestion () {
@@ -44,10 +47,21 @@ class App extends Component {
 
   selectAnswer = (option) => {
     const { answers } = this.state
+    const currentQuestion = this.state.quiz[this.state.currentQuestionId]
 
     this.pause()
 
     this.setState({ selectedAnswer: option })
+
+    if (option === currentQuestion.answer) {
+      this.setState({
+        combo: this.state.combo + 1,
+        points: this.state.points + ((this.state.combo + 1) * 100),
+        previousPoints: this.state.points
+      })
+    } else {
+      this.setState({ combo: 0 })
+    }
 
     setTimeout(() => {
       this.resume()
@@ -148,6 +162,9 @@ class App extends Component {
           selectAnswer={this.selectAnswer}
           questions={this.state.quiz}
           currentQuestion={currentQuestion}
+          points={this.state.points}
+          previousPoints={this.state.previousPoints}
+          combo={this.state.combo}
         />
       )
     }
