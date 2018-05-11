@@ -16,6 +16,7 @@ const Answer = props => {
       className="answer"
       onClick={() => props.selectAnswer(props.company)}
       role="button"
+      style={props.style}
     >
       <div className="answer__identifier">{ props.identifier }</div>
       <div className="answer__value">{ props.company }</div>

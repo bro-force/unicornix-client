@@ -43,10 +43,7 @@ class App extends Component {
   }
 
   selectAnswer = (option) => {
-    const {
-      currentQuestionId,
-      answers
-    } = this.state
+    const { answers } = this.state
 
     this.pause()
 
@@ -56,9 +53,9 @@ class App extends Component {
       this.resume()
 
       if (this.hasNextQuestion) {
+        this.next()
+
         this.setState({
-          time: maxTime,
-          currentQuestionId: currentQuestionId + 1,
           answers: [ ...answers, option ],
           selectedAnswer: null
         })
@@ -91,10 +88,16 @@ class App extends Component {
   }
 
   next = () => {
+    clearInterval(this.intervalId)
+
     this.setState({
       time: maxTime,
       currentQuestionId: this.state.currentQuestionId + 1
     })
+
+    setTimeout(() => {
+      this.intervalId = setInterval(this.tick, second)
+    }, 0.1 * second)
   }
 
   finish = () => {
