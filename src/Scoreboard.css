@@ -1,0 +1,45 @@
+.scoreboard {
+  text-align: center;
+  margin-bottom: 20px;
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.scoreboard__time {
+  color: #FFFFFF;
+  font-size: 2.3rem;
+  font-family: 'Heebo', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.7px;
+  margin-bottom: 15px;
+}
+
+.scoreboard__score {
+  color: #E1BEE7;
+  text-transform: uppercase;
+  font-family: 'Heebo', sans-serif;
+  position: relative;
+}
+
+.scoreboard__score::before,
+.scoreboard__score::after {
+  content: '';
+  position: absolute;
+  width: 50%;
+  height: 2px;
+  display: block;
+  top: 8.3px;
+  background-color: #E1BEE7;
+  opacity: 0.1;
+}
+
+.scoreboard__score::before {
+  left: -80px;
+}
+
+.scoreboard__score::after {
+  right: -80px;
+}
