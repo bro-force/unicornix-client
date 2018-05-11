@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './Scoreboard.css'
+import './styles/scoreboard.css'
 
 const Scoreboard = props => {
   const timeInSeconds = props.time / 1000

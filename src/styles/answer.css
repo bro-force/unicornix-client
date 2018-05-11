@@ -77,3 +77,30 @@
   padding-left: 15px;
   padding-right: 15px;
 }
+
+.answer__feedback {
+  position: absolute;
+  width: 50px;
+  bottom: 20px;
+  right: 20px;
+}
+
+.answer:nth-child(1) .answer__feedback {
+  right: 20px;
+  bottom: 20px;
+}
+
+.answer:nth-child(2) .answer__feedback {
+  left: 20px;
+  bottom: 20px;
+}
+
+.answer:nth-child(3) .answer__feedback {
+  right: 20px;
+  top: 20px;
+}
+
+.answer:nth-child(4) .answer__feedback {
+  left: 20px;
+  top: 20px;
+}
