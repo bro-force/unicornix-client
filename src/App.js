@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 
 import Quiz from './Quiz'
 
-import './App.css'
-import './reset.css'
+import './styles/app.css'
+import './styles/reset.css'
 
 const second = 1000
 const maxTime = 15 * second
@@ -30,27 +30,47 @@ class App extends Component {
   state = {
     selectedAnswer: null,
     time: maxTime,
-    started: false,
-    finished: false,
     quiz: fakeData,
     currentQuestionId: 0,
-    answers: []
+    answers: [],
+    started: false,
+    finished: false,
+    paused: false
+  }
+
+  get hasNextQuestion () {
+    return this.state.currentQuestionId < this.state.quiz.length - 1
   }
 
   selectAnswer = (option) => {
-    if (this.state.currentQuestionId < this.state.quiz.length - 1) {
-      this.setState({
-        time: maxTime,
-        currentQuestionId: this.state.currentQuestionId + 1,
-        answers: [ ...this.state.answers, option ]
-      })
-    } else {
-      this.setState({
-        time: 0,
-        finished: true,
-        answers: [ ...this.state.answers, option ]
-      })
-    }
+    const {
+      currentQuestionId,
+      answers
+    } = this.state
+
+    this.pause()
+
+    this.setState({ selectedAnswer: option })
+
+    setTimeout(() => {
+      this.resume()
+
+      if (this.hasNextQuestion) {
+        this.setState({
+          time: maxTime,
+          currentQuestionId: currentQuestionId + 1,
+          answers: [ ...answers, option ],
+          selectedAnswer: null
+        })
+      } else {
+        this.setState({
+          time: 0,
+          finished: true,
+          answers: [ ...answers, option ],
+          selectedAnswer: null
+        })
+      }
+    }, second)
   }
 
   start = () => {
@@ -58,28 +78,50 @@ class App extends Component {
     this.intervalId = setInterval(this.tick, second)
   }
 
-  tick = () => {
-    if (this.state.time > 0) {
-      this.setState({
-        time: this.state.time - second
-      })
-    } else {
-      if (this.state.currentQuestionId < this.state.quiz.length - 1) {
-        setTimeout(() => {
-          this.setState({
-            time: maxTime,
-            currentQuestionId: this.state.currentQuestionId + 1,
-          })
-        })
-      } else {
-        clearInterval(this.intervalId)
+  pause = () => {
+    this.setState({ paused: true })
+  }
 
-        this.setState({
-          finished: true,
-          time: 0
-        })
+  resume = () => {
+    this.setState({ paused: false })
+  }
+
+  decrementTime = () => {
+    this.setState({ time: this.state.time - second })
+  }
+
+  next = () => {
+    this.setState({
+      time: maxTime,
+      currentQuestionId: this.state.currentQuestionId + 1
+    })
+  }
+
+  finish = () => {
+    clearInterval(this.intervalId)
+
+    this.setState({
+      finished: true,
+      time: 0
+    })
+  }
+
+  tick = () => {
+    const {
+      time,
+      paused
+    } = this.state
+
+    if (!paused) {
+      if (time > 0) {
+        this.decrementTime()
+      } else if (this.hasNextQuestion) {
+        this.next()
+      } else {
+        this.finish()
       }
     }
+
   }
 
   render() {
@@ -93,7 +135,7 @@ class App extends Component {
       )
     }
 
-    if (this.state.started && !this.state.finished) {
+    if (this.state.started) {
       const currentQuestion = this.state.quiz[this.state.currentQuestionId]
 
       return (
