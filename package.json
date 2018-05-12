@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "dotenv": "^5.0.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-motion": "^0.5.2",

@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 
 import Quiz from './Quiz'
+
 import * as api from './api'
+import { encryptAnswer } from './helpers/crypto'
 
 import './styles/app.css'
 import './styles/reset.css'
@@ -36,7 +38,7 @@ class App extends Component {
 
     this.setState({ selectedAnswer: option })
 
-    if (option === currentQuestion.answer) {
+    if (encryptAnswer(option) === currentQuestion.answer) {
       this.setState({
         combo: this.state.combo + 1,
         points: this.state.points + ((this.state.combo + 1) * 100),
@@ -126,7 +128,6 @@ class App extends Component {
         this.finish()
       }
     }
-
   }
 
   render() {
