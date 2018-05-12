@@ -90,23 +90,27 @@ class App extends Component {
     }, second)
   }
 
-  start = () => {
+  fetchQuiz = () => {
+    this.setState({
+      loadingQuiz: true
+    })
+
     return api.getQuiz()
-      .then(quiz => {
-        const estimatedReadingTime =
-          readingTime(quiz[0].comment) + (10 * second)
+  }
 
-        this.setState({
-          started: true,
-          quiz,
-          startTime: estimatedReadingTime,
-          time: estimatedReadingTime,
-        })
+  start = (quiz) => {
+    const estimatedReadingTime =
+      readingTime(quiz[0].comment) + (10 * second)
 
-        this.intervalId = setInterval(this.tick, second)
+    this.setState({
+      started: true,
+      loadingQuiz: true,
+      quiz,
+      startTime: estimatedReadingTime,
+      time: estimatedReadingTime,
+    })
 
-        return quiz
-      })
+    this.intervalId = setInterval(this.tick, second)
   }
 
   pause = () => {
@@ -170,7 +174,8 @@ class App extends Component {
         value={{
           ...this.state,
           start: this.start,
-          selectAnswer: this.selectAnswer
+          selectAnswer: this.selectAnswer,
+          fetchQuiz: this.fetchQuiz
         }}
       >
         <Router started={this.state.started} />
