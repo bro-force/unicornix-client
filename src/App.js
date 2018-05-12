@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 
 import Quiz from './Quiz'
 import Router from './Routes'
@@ -8,12 +9,19 @@ import * as api from './api'
 import { encryptAnswer } from './helpers/crypto'
 
 import {
+  lgBreakpoint,
+  getDeviceWidth
+} from './helpers/dimensions'
+
+import {
   readingTime,
   second
 } from './helpers/time'
 
 import './styles/app.css'
 import './styles/reset.css'
+
+import fakeData from './fakeData.json'
 
 const defaultPoints = 100
 
@@ -95,7 +103,11 @@ class App extends Component {
       loadingQuiz: true
     })
 
-    return api.getQuiz()
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(fakeData)
+      }, 2000)
+    })
   }
 
   start = (quiz) => {
@@ -128,6 +140,7 @@ class App extends Component {
   next = () => {
     const nextQuestion = this.state.quiz[this.state.currentQuestionId + 1]
     const estimatedReadingTime = readingTime(nextQuestion.comment) + (10 * second)
+    const deviceWidth = getDeviceWidth()
 
     clearInterval(this.intervalId)
 
@@ -140,6 +153,16 @@ class App extends Component {
     setTimeout(() => {
       this.intervalId = setInterval(this.tick, second)
     }, 0.1 * second)
+
+    if (deviceWidth < lgBreakpoint) {
+      setTimeout(() => {
+        this.scrollToTop()
+      }, second)
+    }
+  }
+
+  scrollToTop () {
+    ReactDOM.findDOMNode(this).scrollIntoView()
   }
 
   finish = () => {
