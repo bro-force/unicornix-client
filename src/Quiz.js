@@ -1,19 +1,9 @@
 import React from 'react'
 
-import {
-  Motion,
-  StaggeredMotion,
-  spring
-} from 'react-motion'
-
-import Answer from './Answer'
 import Scoreboard from './Scoreboard'
 import Answers from './Answers'
 import PointsPopup from './PointsPopup'
-
 import AppContext from './AppContext'
-
-import { encryptAnswer } from './helpers/crypto'
 
 const Quiz = props => {
   return (

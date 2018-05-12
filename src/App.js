@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
-import Quiz from './Quiz'
 import Router from './Routes'
 import AppContext from './AppContext.js'
 
@@ -20,8 +19,6 @@ import {
 
 import './styles/app.css'
 import './styles/reset.css'
-
-import fakeData from './fakeData.json'
 
 const defaultPoints = 100
 
@@ -103,11 +100,7 @@ class App extends Component {
       loadingQuiz: true
     })
 
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(fakeData)
-      }, 2000)
-    })
+    return api.getQuiz()
   }
 
   start = (quiz) => {

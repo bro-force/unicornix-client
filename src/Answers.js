@@ -56,6 +56,7 @@ const Answers = props => {
 
               return (
                 <Answer
+                  key={alternative}
                   selectAnswer={props.selectAnswer}
                   selectedAnswer={props.selectedAnswer}
                   identifier={identifiers[index]}

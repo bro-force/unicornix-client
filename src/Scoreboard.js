@@ -1,5 +1,10 @@
 import React from 'react'
-import { Motion, spring } from 'react-motion'
+import TrackVisibility from 'react-on-screen'
+
+import {
+  Motion,
+  spring
+} from 'react-motion'
 
 import './styles/scoreboard.css'
 
@@ -18,7 +23,29 @@ const Scoreboard = props => {
 
   return (
     <div className="scoreboard">
-      <h2 className="scoreboard__time">{ minutesDisplay }:{ secondsDisplay }</h2>
+      <TrackVisibility
+        throttleInterval={500}
+      >
+        {({ isVisible }) => {
+          const classNames = [
+            'scoreboard__floating-timer',
+            isVisible && 'scoreboard__floating-timer--hidden'
+          ]
+            .filter(className => !!className)
+            .join(' ')
+
+          return (
+            <h2 className={classNames}>
+              { minutesDisplay }:{ secondsDisplay }
+            </h2>
+          )
+        }}
+      </TrackVisibility>
+
+      <h2 className="scoreboard__time">
+        { minutesDisplay }:{ secondsDisplay }
+      </h2>
+
       <Motion
         defaultStyle={{ points: props.previousPoints }}
         style={{ points: spring(props.points, animationConfig) }}
