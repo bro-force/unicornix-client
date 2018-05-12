@@ -14,7 +14,9 @@ const Answer = props => {
   return (
     <div
       className="answer"
-      onClick={() => props.selectAnswer(props.company)}
+      onClick={() => {
+        !props.selectedAnswer && props.selectAnswer(props.company)
+      }}
       role="button"
       style={props.style}
     >

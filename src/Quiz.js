@@ -10,6 +10,7 @@ import Answer from './Answer'
 import Scoreboard from './Scoreboard'
 
 import { minutes } from './helpers/time'
+import { encryptAnswer } from './helpers/crypto'
 
 const identifiers = [ 'A', 'B', 'C', 'D' ]
 
@@ -27,7 +28,7 @@ const Quiz = props => {
     return (
       props.selectedAnswer !== null &&
       props.selectedAnswer === answer &&
-      props.selectedAnswer !== props.currentQuestion.answer
+      encryptAnswer(props.selectedAnswer) !== props.currentQuestion.answer
     )
   }
 
@@ -35,7 +36,7 @@ const Quiz = props => {
     return (
       props.selectAnswer !== null &&
       props.selectedAnswer === answer &&
-      props.selectedAnswer === props.currentQuestion.answer
+      encryptAnswer(props.selectedAnswer) === props.currentQuestion.answer
     )
   }
 
