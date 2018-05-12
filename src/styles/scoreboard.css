@@ -17,11 +17,13 @@
   margin-bottom: 15px;
 }
 
-.scoreboard__score {
+.scoreboard__score,
+.scoreboard__combo {
   color: #E1BEE7;
   text-transform: uppercase;
   font-family: 'Heebo', sans-serif;
   position: relative;
+  margin-top: 2.5px;
 }
 
 .scoreboard__score::before,
@@ -42,4 +44,15 @@
 
 .scoreboard__score::after {
   right: -80px;
+}
+
+.scoreboard__new-points {
+  font-size: 3.5rem;
+  position: absolute;
+  font-weight: bold;
+  margin-top: 50px;
+  margin-left: 90px;
+  color: #E1BEE7;
+  text-transform: uppercase;
+  font-family: 'Heebo', sans-serif;
 }
