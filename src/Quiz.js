@@ -9,7 +9,6 @@ import {
 import Answer from './Answer'
 import Scoreboard from './Scoreboard'
 
-import { minutes } from './helpers/time'
 import { encryptAnswer } from './helpers/crypto'
 
 const identifiers = [ 'A', 'B', 'C', 'D' ]
@@ -63,7 +62,6 @@ const Quiz = props => {
         >
           {({ points }) => {
             const newPoints = props.points - props.previousPoints
-            const remainingPoints = props.points - points
             const canDisplay = points !== props.points
 
             return (
@@ -81,13 +79,13 @@ const Quiz = props => {
         </Motion>
         <StaggeredMotion
           defaultStyles={[
-            { scale: props.time === minutes(15) ? 0 : 1 },
-            { scale: props.time === minutes(15) ? 0 : 1 },
-            { scale: props.time === minutes(15) ? 0 : 1 },
-            { scale: props.time === minutes(15) ? 0 : 1 }
+            { scale: props.time === props.startTime ? 0 : 1 },
+            { scale: props.time === props.startTime ? 0 : 1 },
+            { scale: props.time === props.startTime ? 0 : 1 },
+            { scale: props.time === props.startTime ? 0 : 1 },
           ]}
           styles={prevInterpolatedStyles => [
-            { scale: props.time === minutes(15) ? spring(0, animationConfig) : spring(1, animationConfig) },
+            { scale: props.time === props.startTime ? spring(0, animationConfig) : spring(1, animationConfig) },
             { scale: spring(prevInterpolatedStyles[0].scale, animationConfig) },
             { scale: spring(prevInterpolatedStyles[3].scale, animationConfig) },
             { scale: spring(prevInterpolatedStyles[1].scale, animationConfig) },
