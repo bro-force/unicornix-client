@@ -5,16 +5,21 @@ import Quiz from './Quiz'
 import * as api from './api'
 import { encryptAnswer } from './helpers/crypto'
 
+import {
+  readingTime,
+  second
+} from './helpers/time'
+
 import './styles/app.css'
 import './styles/reset.css'
 
-const second = 1000
-const maxTime = 15 * second
+const defaultPoints = 100
 
 class App extends Component {
   state = {
     selectedAnswer: null,
-    time: maxTime,
+    startTime: 0,
+    time: 0,
     quiz: [],
     currentQuestionId: 0,
     answers: [],
@@ -30,6 +35,20 @@ class App extends Component {
     return this.state.currentQuestionId < this.state.quiz.length - 1
   }
 
+  calculatePoints = (
+    points,
+    combo,
+    time = this.state.time,
+    startTime = this.state.startTime
+  ) => {
+    const speedRate = time / startTime
+
+    const speedBonus = defaultPoints * speedRate
+    const comboBonus = (combo + 1) * defaultPoints
+
+    return Math.floor(points + comboBonus + speedBonus)
+  }
+
   selectAnswer = (option) => {
     const { answers } = this.state
     const currentQuestion = this.state.quiz[this.state.currentQuestionId]
@@ -41,7 +60,7 @@ class App extends Component {
     if (encryptAnswer(option) === currentQuestion.answer) {
       this.setState({
         combo: this.state.combo + 1,
-        points: this.state.points + ((this.state.combo + 1) * 100),
+        points: this.calculatePoints(this.state.points, this.state.combo),
         previousPoints: this.state.points
       })
     } else {
@@ -72,9 +91,14 @@ class App extends Component {
   start = () => {
     api.getQuiz()
       .then(quiz => {
+        const estimatedReadingTime =
+          readingTime(quiz[0].comment) + (10 * second)
+
         this.setState({
           started: true,
-          quiz
+          quiz,
+          startTime: estimatedReadingTime,
+          time: estimatedReadingTime
         })
 
         this.intervalId = setInterval(this.tick, second)
@@ -94,10 +118,14 @@ class App extends Component {
   }
 
   next = () => {
+    const nextQuestion = this.state.quiz[this.state.currentQuestionId + 1]
+    const estimatedReadingTime = readingTime(nextQuestion.comment) + (10 * second)
+
     clearInterval(this.intervalId)
 
     this.setState({
-      time: maxTime,
+      startTime: estimatedReadingTime,
+      time: estimatedReadingTime,
       currentQuestionId: this.state.currentQuestionId + 1
     })
 
@@ -122,7 +150,7 @@ class App extends Component {
     } = this.state
 
     if (!paused) {
-      if (time > 0) {
+      if (time > second) {
         this.decrementTime()
       } else if (this.hasNextQuestion) {
         this.next()
@@ -149,6 +177,7 @@ class App extends Component {
       return (
         <Quiz
           time={this.state.time}
+          startTime={this.state.startTime}
           selectedAnswer={this.state.selectedAnswer}
           selectAnswer={this.selectAnswer}
           questions={this.state.quiz}

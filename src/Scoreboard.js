@@ -8,7 +8,7 @@ const animationConfig = {
 }
 
 const Scoreboard = props => {
-  const timeInSeconds = props.time / 1000
+  const timeInSeconds = Math.floor(props.time / 1000)
 
   const minutes = Math.floor(timeInSeconds / 60)
   const remainingSeconds = timeInSeconds % 60
