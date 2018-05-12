@@ -8,116 +8,53 @@ import {
 
 import Answer from './Answer'
 import Scoreboard from './Scoreboard'
+import Answers from './Answers'
+import PointsPopup from './PointsPopup'
+
+import AppContext from './AppContext'
 
 import { encryptAnswer } from './helpers/crypto'
 
-const identifiers = [ 'A', 'B', 'C', 'D' ]
-
-const animationConfig = {
-  stiffness: 1000,
-  damping: 100
-}
-
-const pointsSpringConfig = {
-  stiffness: 1000
-}
-
 const Quiz = props => {
-  const hasError = (answer) => {
-    return (
-      props.selectedAnswer !== null &&
-      props.selectedAnswer === answer &&
-      encryptAnswer(props.selectedAnswer) !== props.currentQuestion.answer
-    )
-  }
-
-  const hasSuccess = (answer) => {
-    return (
-      props.selectAnswer !== null &&
-      props.selectedAnswer === answer &&
-      encryptAnswer(props.selectedAnswer) === props.currentQuestion.answer
-    )
-  }
-
   return (
-    <div className="quiz">
-      <div className="quiz__main">
-        <Scoreboard
-          time={props.time}
-          points={props.points}
-          previousPoints={props.previousPoints}
-          combo={props.combo}
-        />
-        <blockquote className="quiz__quote">
-          <p className="quiz__commentary">
-            { props.currentQuestion.comment }
-          </p>
-        </blockquote>
-      </div>
+    <AppContext.Consumer>
+      {(context) => {
+        const currentQuestion = context.quiz[context.currentQuestionId]
 
-      <div className="quiz__answers">
-        <Motion
-          defaultStyle={{ points: props.previousPoints }}
-          style={{ points: spring(props.points, pointsSpringConfig) }}
-        >
-          {({ points }) => {
-            const newPoints = props.points - props.previousPoints
-            const canDisplay = points !== props.points
+        return (
+          <div className="quiz">
+            <div className="quiz__main">
+              <Scoreboard
+                time={context.time}
+                points={context.points}
+                previousPoints={context.previousPoints}
+                combo={context.combo}
+              />
+              <blockquote className="quiz__quote">
+                <p className="quiz__commentary">
+                  { currentQuestion.comment }
+                </p>
+              </blockquote>
+            </div>
 
-            return (
-              <span
-                className="quiz__new-points"
-                style={{
-                  transform: `scale(${ points / props.points })`,
-                  display: canDisplay ? 'block' : 'none'
-                }}
-              >
-                +{ newPoints }
-              </span>
-            )
-          }}
-        </Motion>
-        <StaggeredMotion
-          defaultStyles={[
-            { scale: props.time === props.startTime ? 0 : 1 },
-            { scale: props.time === props.startTime ? 0 : 1 },
-            { scale: props.time === props.startTime ? 0 : 1 },
-            { scale: props.time === props.startTime ? 0 : 1 },
-          ]}
-          styles={prevInterpolatedStyles => [
-            { scale: props.time === props.startTime ? spring(0, animationConfig) : spring(1, animationConfig) },
-            { scale: spring(prevInterpolatedStyles[0].scale, animationConfig) },
-            { scale: spring(prevInterpolatedStyles[3].scale, animationConfig) },
-            { scale: spring(prevInterpolatedStyles[1].scale, animationConfig) },
-          ]}
-        >
-          { interpolatingStyles => {
-            return (
-              <React.Fragment>
-                { props.currentQuestion.alternatives.map((alternative, index) => {
-                  const style = interpolatingStyles[index]
+            <div className="quiz__answers">
+              <PointsPopup
+                points={context.points}
+                previousPoints={context.previousPoints}
+              />
 
-                  return (
-                    <Answer
-                      selectAnswer={props.selectAnswer}
-                      selectedAnswer={props.selectedAnswer}
-                      identifier={identifiers[index]}
-                      company={alternative}
-                      error={hasError(alternative)}
-                      success={hasSuccess(alternative)}
-                      style={{
-                        transform: `scale(${style.scale})`,
-                        opacity: style.scale
-                      }}
-                    />
-                  )
-                })}
-              </React.Fragment>
-            )
-          }}
-        </StaggeredMotion>
-      </div>
-    </div>
+              <Answers
+                time={context.time}
+                startTime={context.startTime}
+                currentQuestion={currentQuestion}
+                selectAnswer={context.selectAnswer}
+                selectedAnswer={context.selectedAnswer}
+              />
+            </div>
+          </div>
+        )
+      }}
+    </AppContext.Consumer>
   )
 }
 

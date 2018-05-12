@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 
 import Quiz from './Quiz'
+import Router from './Routes'
+import AppContext from './AppContext.js'
 
 import * as api from './api'
 import { encryptAnswer } from './helpers/crypto'
@@ -89,7 +91,7 @@ class App extends Component {
   }
 
   start = () => {
-    api.getQuiz()
+    return api.getQuiz()
       .then(quiz => {
         const estimatedReadingTime =
           readingTime(quiz[0].comment) + (10 * second)
@@ -98,10 +100,12 @@ class App extends Component {
           started: true,
           quiz,
           startTime: estimatedReadingTime,
-          time: estimatedReadingTime
+          time: estimatedReadingTime,
         })
 
         this.intervalId = setInterval(this.tick, second)
+
+        return quiz
       })
   }
 
@@ -161,40 +165,18 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.finished) {
-      return (
-        <div className="finish">
-          <h2>You rock!</h2>
-
-          { this.state.answers.join(', ') }
-        </div>
-      )
-    }
-
-    if (this.state.started && this.state.quiz.length > 0) {
-      const currentQuestion = this.state.quiz[this.state.currentQuestionId]
-
-      return (
-        <Quiz
-          time={this.state.time}
-          startTime={this.state.startTime}
-          selectedAnswer={this.state.selectedAnswer}
-          selectAnswer={this.selectAnswer}
-          questions={this.state.quiz}
-          currentQuestion={currentQuestion}
-          points={this.state.points}
-          previousPoints={this.state.previousPoints}
-          combo={this.state.combo}
-        />
-      )
-    }
-
     return (
-      <div className="pre-quiz">
-        <button onClick={this.start}>Start</button>
-      </div>
+      <AppContext.Provider
+        value={{
+          ...this.state,
+          start: this.start,
+          selectAnswer: this.selectAnswer
+        }}
+      >
+        <Router started={this.state.started} />
+      </AppContext.Provider>
     )
   }
 }
 
-export default App;
+export default App
