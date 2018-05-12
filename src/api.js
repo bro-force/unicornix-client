@@ -1,5 +1,5 @@
-const endpoint = "http://localhost:5000/unicornix-54c1b/us-central1"
-const quiz = `${endpoint}/randomQuestion`
+const endpoint = process.env.REACT_APP_API_ENDPOINT
+const quiz = `${endpoint}/quiz`
 
 export const getQuiz = () => {
   return fetch(quiz)

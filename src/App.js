@@ -70,12 +70,14 @@ class App extends Component {
   }
 
   start = () => {
-    this.setState({ started: true })
-    this.intervalId = setInterval(this.tick, second)
-
     api.getQuiz()
       .then(quiz => {
-        this.setState({ quiz })
+        this.setState({
+          started: true,
+          quiz
+        })
+
+        this.intervalId = setInterval(this.tick, second)
       })
   }
 
