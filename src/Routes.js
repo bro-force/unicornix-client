@@ -10,6 +10,7 @@ import {
 
 import Home from './Home'
 import Quiz from './Quiz'
+import Result from './Result'
 
 const Router = (props) => {
   return (
@@ -24,12 +25,30 @@ const Router = (props) => {
         <Route
           exact
           path="/quiz"
+          render={() => {
+            if (!props.started) {
+              return (
+                <Redirect to="/" />
+              )
+            } else if (props.started && !props.finished) {
+              return (
+                <Quiz />
+              )
+            } else {
+              return (
+                <Redirect to="/result" />
+              )
+            }
+          }}
+        />
+
+        <Route
+          exact
+          path="/result"
           render={() => (
-            props.started ? (
-              <Quiz />
-            ) : (
-              <Redirect to="/" />
-            )
+            props.finished
+              ? <Result />
+              : <Redirect to="/" />
           )}
         />
 

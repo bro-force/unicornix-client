@@ -17,6 +17,8 @@ import {
   second
 } from './helpers/time'
 
+import fakeData from './fakeData.json'
+
 import './styles/app.css'
 import './styles/reset.css'
 
@@ -100,7 +102,12 @@ class App extends Component {
       loadingQuiz: true
     })
 
-    return api.getQuiz()
+    // return api.getQuiz()
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        return resolve(fakeData)
+      }, 1000)
+    })
   }
 
   start = (quiz) => {
@@ -194,7 +201,10 @@ class App extends Component {
           fetchQuiz: this.fetchQuiz
         }}
       >
-        <Router started={this.state.started} />
+        <Router
+          started={this.state.started}
+          finished={this.state.finished}
+        />
       </AppContext.Provider>
     )
   }
