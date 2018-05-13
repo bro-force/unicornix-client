@@ -6,6 +6,13 @@
   height: 100vh;
 }
 
+.result__title {
+  font-size: 3.5rem;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  color: #FFFFFF;
+}
+
 .result__trophy-wrapper {
   display: flex;
   justify-content: center;
@@ -15,14 +22,9 @@
 .result__trophy {
   width: 150px;
   height: 150px;
-  color: white;
   transform: scale(0);
   animation: scaleIn 0.3s ease forwards;
-  animation-delay: 1s;
-}
-
-.result__data {
-  
+  animation-delay: 0.5;
 }
 
 .result__data-item {
@@ -51,7 +53,7 @@
   position: absolute;
   transform: scale(0);
   animation: scaleIn 0.3s cubic-bezier(0.65, 0.05, 0.36, 1) forwards;
-  animation-delay: 1.3s;
+  animation-delay: 0.8s;
 }
 
 .result__star:nth-of-type(1) {
@@ -65,13 +67,13 @@
   margin-top: 30px;
   width: 40px;
   height: 40px;
-  animation-delay: 1.5s;
+  animation-delay: 1s;
 }
 
 .result__star:nth-of-type(4),
 .result__star:nth-of-type(5) {
   margin-top: 50px;
-  animation-delay: 1.7s;
+  animation-delay: 1.2s;
 }
 
 .result__star:nth-of-type(2) { left: calc(50% - 60px); }
@@ -85,10 +87,17 @@
   animation: scaleIn 0.3s cubic-bezier(0.65, 0.05, 0.36, 1) forwards;
 }
 
-.result__data-item:nth-of-type(1) { animation-delay: 2s; }
-.result__data-label:nth-of-type(1) { animation-delay: 2.1s; }
-.result__data-item:nth-of-type(2) { animation-delay: 2.4s; }
-.result__data-label:nth-of-type(2) { animation-delay: 2.5s; }
+.result__data .result__data-set:nth-of-type(1) .result__data-item { animation-delay: 1.5s; }
+.result__data .result__data-set:nth-of-type(1) .result__data-label { animation-delay: 1.6s; }
+.result__data .result__data-set:nth-of-type(2) .result__data-item { animation-delay: 1.9s; }
+.result__data .result__data-set:nth-of-type(2) .result__data-label { animation-delay: 2.0s; }
+.result__data .result__data-set:nth-of-type(3) .result__data-item { animation-delay: 2.4s; }
+.result__data .result__data-set:nth-of-type(3) .result__data-label { animation-delay: 2.5s; }
+
+.result__twitter-icon {
+  width: 35px;
+  height: 35px;
+}
 
 @keyframes scaleIn {
   from { transform: scale(0) }

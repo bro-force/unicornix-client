@@ -48,7 +48,7 @@ const Router = (props) => {
           render={() => (
             props.finished
               ? <Result />
-              : <Redirect to="/" />
+              : <Result />
           )}
         />
 

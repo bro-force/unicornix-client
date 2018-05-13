@@ -35,7 +35,8 @@ class App extends Component {
     started: false,
     finished: false,
     paused: false,
-    combo: 0,
+    combo: -1,
+    maxCombo: 0,
     points: 0,
     previousPoints: 0
   }
@@ -61,19 +62,34 @@ class App extends Component {
   selectAnswer = (option) => {
     const { answers } = this.state
     const currentQuestion = this.state.quiz[this.state.currentQuestionId]
+    const selectedAnswerEncrypted = encryptAnswer(option)
+    const isCorrect = selectedAnswerEncrypted === currentQuestion.answer
+
+    const questionStatus = {
+      isCorrect,
+      selectedAnswer: selectedAnswerEncrypted,
+      answer: currentQuestion.answer
+    }
 
     this.pause()
 
     this.setState({ selectedAnswer: option })
 
-    if (encryptAnswer(option) === currentQuestion.answer) {
+    if (isCorrect) {
+      const newCombo = this.state.combo + 1
+      const maxCombo =
+        this.state.maxCombo > newCombo
+          ? this.state.maxCombo
+          : newCombo
+
       this.setState({
         combo: this.state.combo + 1,
         points: this.calculatePoints(this.state.points, this.state.combo),
-        previousPoints: this.state.points
+        previousPoints: this.state.points,
+        maxCombo
       })
     } else {
-      this.setState({ combo: 0 })
+      this.setState({ combo: -1 })
     }
 
     setTimeout(() => {
@@ -83,14 +99,14 @@ class App extends Component {
         this.next()
 
         this.setState({
-          answers: [ ...answers, option ],
+          answers: [ ...answers, questionStatus ],
           selectedAnswer: null
         })
       } else {
         this.setState({
           time: 0,
           finished: true,
-          answers: [ ...answers, option ],
+          answers: [ ...answers, questionStatus ],
           selectedAnswer: null
         })
       }
