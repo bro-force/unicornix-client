@@ -20,6 +20,7 @@ const Scoreboard = props => {
 
   const minutesDisplay = String(minutes).padStart(2, '0')
   const secondsDisplay = String(remainingSeconds).padStart(2, '0')
+  const combo = props.combo < 0 ? 0 : props.combo
 
   return (
     <div className="scoreboard">
@@ -52,13 +53,11 @@ const Scoreboard = props => {
       >
         {({ points }) => {
           return (
-            <React.Fragment>
-              <div className="scoreboard__score">Pontuação: { Math.floor(points) }</div>
-              <div className="scoreboard__combo">Combo: { props.combo }</div>
-            </React.Fragment>
+            <div className="scoreboard__score">Pontuação: { Math.floor(points) }</div>
           )
         }}
       </Motion>
+      <div className="scoreboard__combo">Combo: { combo }</div>
     </div>
   )
 }
