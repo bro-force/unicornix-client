@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 
-import Quiz from './Quiz'
+import Router from './Routes'
+import AppContext from './AppContext.js'
 
 import * as api from './api'
 import { encryptAnswer } from './helpers/crypto'
+
+import {
+  lgBreakpoint,
+  getDeviceWidth
+} from './helpers/dimensions'
 
 import {
   readingTime,
@@ -15,24 +22,32 @@ import './styles/reset.css'
 
 const defaultPoints = 100
 
+const initialState = {
+  selectedAnswer: null,
+  startTime: 0,
+  time: 0,
+  quiz: [],
+  loadingQuiz: false,
+  currentQuestionId: 0,
+  answers: [],
+  started: false,
+  finished: false,
+  paused: false,
+  combo: -1,
+  maxCombo: 0,
+  points: 0,
+  previousPoints: 0
+}
+
 class App extends Component {
-  state = {
-    selectedAnswer: null,
-    startTime: 0,
-    time: 0,
-    quiz: [],
-    currentQuestionId: 0,
-    answers: [],
-    started: false,
-    finished: false,
-    paused: false,
-    combo: 0,
-    points: 0,
-    previousPoints: 0
-  }
+  state = initialState
 
   get hasNextQuestion () {
     return this.state.currentQuestionId < this.state.quiz.length - 1
+  }
+
+  resetQuiz = (callback) => {
+    this.setState(initialState, callback)
   }
 
   calculatePoints = (
@@ -41,30 +56,46 @@ class App extends Component {
     time = this.state.time,
     startTime = this.state.startTime
   ) => {
+    const newCombo = combo + 1 < 2 ? 0 : combo + 1
     const speedRate = time / startTime
 
     const speedBonus = defaultPoints * speedRate
-    const comboBonus = (combo + 1) * defaultPoints
+    const comboBonus = newCombo * defaultPoints
 
-    return Math.floor(points + comboBonus + speedBonus)
+    return Math.floor(points + comboBonus + speedBonus + defaultPoints)
   }
 
   selectAnswer = (option) => {
     const { answers } = this.state
     const currentQuestion = this.state.quiz[this.state.currentQuestionId]
+    const selectedAnswerEncrypted = encryptAnswer(option)
+    const isCorrect = selectedAnswerEncrypted === currentQuestion.answer
+
+    const questionStatus = {
+      isCorrect,
+      selectedAnswer: selectedAnswerEncrypted,
+      answer: currentQuestion.answer
+    }
 
     this.pause()
 
     this.setState({ selectedAnswer: option })
 
-    if (encryptAnswer(option) === currentQuestion.answer) {
+    if (isCorrect) {
+      const newCombo = this.state.combo + 1
+      const maxCombo =
+        this.state.maxCombo > newCombo
+          ? this.state.maxCombo
+          : newCombo
+
       this.setState({
         combo: this.state.combo + 1,
         points: this.calculatePoints(this.state.points, this.state.combo),
-        previousPoints: this.state.points
+        previousPoints: this.state.points,
+        maxCombo
       })
     } else {
-      this.setState({ combo: 0 })
+      this.setState({ combo: -1 })
     }
 
     setTimeout(() => {
@@ -74,35 +105,41 @@ class App extends Component {
         this.next()
 
         this.setState({
-          answers: [ ...answers, option ],
+          answers: [ ...answers, questionStatus ],
           selectedAnswer: null
         })
       } else {
         this.setState({
           time: 0,
           finished: true,
-          answers: [ ...answers, option ],
+          answers: [ ...answers, questionStatus ],
           selectedAnswer: null
         })
       }
     }, second)
   }
 
-  start = () => {
-    api.getQuiz()
-      .then(quiz => {
-        const estimatedReadingTime =
-          readingTime(quiz[0].comment) + (10 * second)
+  fetchQuiz = () => {
+    this.setState({
+      loadingQuiz: true
+    })
 
-        this.setState({
-          started: true,
-          quiz,
-          startTime: estimatedReadingTime,
-          time: estimatedReadingTime
-        })
+    return api.getQuiz()
+  }
 
-        this.intervalId = setInterval(this.tick, second)
-      })
+  start = (quiz) => {
+    const estimatedReadingTime =
+      readingTime(quiz[0].comment) + (10 * second)
+
+    this.setState({
+      started: true,
+      loadingQuiz: true,
+      quiz,
+      startTime: estimatedReadingTime,
+      time: estimatedReadingTime,
+    })
+
+    this.intervalId = setInterval(this.tick, second)
   }
 
   pause = () => {
@@ -120,6 +157,7 @@ class App extends Component {
   next = () => {
     const nextQuestion = this.state.quiz[this.state.currentQuestionId + 1]
     const estimatedReadingTime = readingTime(nextQuestion.comment) + (10 * second)
+    const deviceWidth = getDeviceWidth()
 
     clearInterval(this.intervalId)
 
@@ -132,6 +170,16 @@ class App extends Component {
     setTimeout(() => {
       this.intervalId = setInterval(this.tick, second)
     }, 0.1 * second)
+
+    if (deviceWidth < lgBreakpoint) {
+      setTimeout(() => {
+        this.scrollToTop()
+      }, second)
+    }
+  }
+
+  scrollToTop () {
+    ReactDOM.findDOMNode(this).scrollIntoView()
   }
 
   finish = () => {
@@ -161,40 +209,23 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.finished) {
-      return (
-        <div className="finish">
-          <h2>You rock!</h2>
-
-          { this.state.answers.join(', ') }
-        </div>
-      )
-    }
-
-    if (this.state.started && this.state.quiz.length > 0) {
-      const currentQuestion = this.state.quiz[this.state.currentQuestionId]
-
-      return (
-        <Quiz
-          time={this.state.time}
-          startTime={this.state.startTime}
-          selectedAnswer={this.state.selectedAnswer}
-          selectAnswer={this.selectAnswer}
-          questions={this.state.quiz}
-          currentQuestion={currentQuestion}
-          points={this.state.points}
-          previousPoints={this.state.previousPoints}
-          combo={this.state.combo}
-        />
-      )
-    }
-
     return (
-      <div className="pre-quiz">
-        <button onClick={this.start}>Start</button>
-      </div>
+      <AppContext.Provider
+        value={{
+          ...this.state,
+          start: this.start,
+          selectAnswer: this.selectAnswer,
+          fetchQuiz: this.fetchQuiz,
+          resetQuiz: this.resetQuiz
+        }}
+      >
+        <Router
+          started={this.state.started}
+          finished={this.state.finished}
+        />
+      </AppContext.Provider>
     )
   }
 }
 
-export default App;
+export default App

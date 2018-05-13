@@ -1,5 +1,10 @@
 import React from 'react'
-import { Motion, spring } from 'react-motion'
+import TrackVisibility from 'react-on-screen'
+
+import {
+  Motion,
+  spring
+} from 'react-motion'
 
 import './styles/scoreboard.css'
 
@@ -15,23 +20,44 @@ const Scoreboard = props => {
 
   const minutesDisplay = String(minutes).padStart(2, '0')
   const secondsDisplay = String(remainingSeconds).padStart(2, '0')
+  const combo = props.combo < 0 ? 0 : props.combo
 
   return (
     <div className="scoreboard">
-      <h2 className="scoreboard__time">{ minutesDisplay }:{ secondsDisplay }</h2>
+      <TrackVisibility
+        throttleInterval={500}
+      >
+        {({ isVisible }) => {
+          const classNames = [
+            'scoreboard__floating-timer',
+            isVisible && 'scoreboard__floating-timer--hidden'
+          ]
+            .filter(className => !!className)
+            .join(' ')
+
+          return (
+            <h2 className={classNames}>
+              { minutesDisplay }:{ secondsDisplay }
+            </h2>
+          )
+        }}
+      </TrackVisibility>
+
+      <h2 className="scoreboard__time">
+        { minutesDisplay }:{ secondsDisplay }
+      </h2>
+
       <Motion
         defaultStyle={{ points: props.previousPoints }}
         style={{ points: spring(props.points, animationConfig) }}
       >
         {({ points }) => {
           return (
-            <React.Fragment>
-              <div className="scoreboard__score">Pontuação: { Math.floor(points) }</div>
-              <div className="scoreboard__combo">Combo: { props.combo }</div>
-            </React.Fragment>
+            <div className="scoreboard__score">Pontuação: { Math.floor(points) }</div>
           )
         }}
       </Motion>
+      <div className="scoreboard__combo">Combo: { combo }</div>
     </div>
   )
 }

@@ -1,0 +1,107 @@
+.home {
+  font-family: 'Raleway', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: #9C27B0;
+  color: #E1BEE7;
+}
+
+.home__logo-wrapper {
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.home__logo-wrapper:before {
+  content: '';
+  display: block;
+  width: 150px;
+  height: 40px;
+  position: absolute;
+  background: black;
+  bottom: -20px;
+  border-radius: 90%;
+  opacity: 0.2;
+}
+
+.home__title {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.home__subtitle {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 50px;
+}
+
+.home__start {
+  position: relative;
+  border: 0;
+  padding: 15px;
+  width: 200px;
+  height: 50px;
+  border-radius: 5px;
+  font-size: 1.05rem;
+  background: #edeae4;
+  text-transform: uppercase;
+  color: #3c3c3c;
+}
+
+.home__start.animate {
+  animation: toCircle 1s alternate forwards;
+}
+
+.home__start.animate::after {
+  content: '';
+  display: block;
+  border: 4px solid transparent;
+  border-top-color: #E1BEE7;
+  border-bottom-color: #E1BEE7;
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  opacity: 0;
+  animation:
+    spin 1s linear infinite 1s,
+    fade 0.4s alternate forwards .8s;
+}
+
+@keyframes toCircle {
+  0% {
+    width: 200px;
+    border-radius: 5px;
+  }
+
+  60% {
+    width: 50px;
+    border-radius: 5px;
+  }
+
+  80% {
+    width: 50px;
+    border-radius: 50%;
+  }
+
+  100% {
+    width: 50px;
+    border-radius: 50%;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg) }
+  to { transform: rotate(360deg) }
+}
+
+@keyframes fade {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
