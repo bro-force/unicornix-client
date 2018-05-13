@@ -17,32 +17,37 @@ import {
   second
 } from './helpers/time'
 
-import fakeData from './fakeData.json'
-
 import './styles/app.css'
 import './styles/reset.css'
 
 const defaultPoints = 100
 
+const initialState = {
+  selectedAnswer: null,
+  startTime: 0,
+  time: 0,
+  quiz: [],
+  loadingQuiz: false,
+  currentQuestionId: 0,
+  answers: [],
+  started: false,
+  finished: false,
+  paused: false,
+  combo: -1,
+  maxCombo: 0,
+  points: 0,
+  previousPoints: 0
+}
+
 class App extends Component {
-  state = {
-    selectedAnswer: null,
-    startTime: 0,
-    time: 0,
-    quiz: [],
-    currentQuestionId: 0,
-    answers: [],
-    started: false,
-    finished: false,
-    paused: false,
-    combo: -1,
-    maxCombo: 0,
-    points: 0,
-    previousPoints: 0
-  }
+  state = initialState
 
   get hasNextQuestion () {
     return this.state.currentQuestionId < this.state.quiz.length - 1
+  }
+
+  resetQuiz = (callback) => {
+    this.setState(initialState, callback)
   }
 
   calculatePoints = (
@@ -51,12 +56,13 @@ class App extends Component {
     time = this.state.time,
     startTime = this.state.startTime
   ) => {
+    const newCombo = combo + 1 < 2 ? 0 : combo + 1
     const speedRate = time / startTime
 
     const speedBonus = defaultPoints * speedRate
-    const comboBonus = (combo + 1) * defaultPoints
+    const comboBonus = newCombo * defaultPoints
 
-    return Math.floor(points + comboBonus + speedBonus)
+    return Math.floor(points + comboBonus + speedBonus + defaultPoints)
   }
 
   selectAnswer = (option) => {
@@ -118,12 +124,7 @@ class App extends Component {
       loadingQuiz: true
     })
 
-    // return api.getQuiz()
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        return resolve(fakeData)
-      }, 1000)
-    })
+    return api.getQuiz()
   }
 
   start = (quiz) => {
@@ -214,7 +215,8 @@ class App extends Component {
           ...this.state,
           start: this.start,
           selectAnswer: this.selectAnswer,
-          fetchQuiz: this.fetchQuiz
+          fetchQuiz: this.fetchQuiz,
+          resetQuiz: this.resetQuiz
         }}
       >
         <Router

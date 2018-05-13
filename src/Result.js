@@ -1,16 +1,24 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 
 import Trophy from './Trophy'
 import Star from './Star'
 import Twitter from './Twitter'
+import Restart from './Restart'
+
 import AppContext from './AppContext'
 
 import './styles/result.css'
 
-const twitterUrl = text => {
-  const textEncoded = encodeURI(text)
+const twitterUrl = (answers, points) => {
+  const successes = countSuccesses(answers)
 
-  return `https://twitter.com/intent/tweet?text=${textEncoded}`
+  const message = encodeURI(`
+    Fiz o quiz da planilha 'Como é trabalhar em Startup' e consegui ${points} pontos
+    e ${successes} acertos! http://quemquerserumunicornix.netlify.com
+  `)
+
+  return `https://twitter.com/intent/tweet?text=${message}`
 }
 
 const countStars = answers => {
@@ -18,16 +26,16 @@ const countStars = answers => {
     answers.filter(answer => answer.isCorrect).length
 
   if (successes === 10) return 5
-  if (successes > 8) return 4
-  if (successes > 6) return 3
-  if (successes > 4) return 2
+  if (successes >= 8) return 4
+  if (successes >= 5) return 3
+  if (successes >= 3) return 2
   if (successes > 0) return 1
 
   return 0
 }
 
 const countSuccesses = answers => {
-  const successes = 
+  const successes =
     answers.filter(answer => answer.isCorrect).length
 
   return successes
@@ -62,12 +70,17 @@ const renderStars = stars => {
 }
 
 const Result = props => {
+  const onReset = (resetQuiz) => () => {
+    resetQuiz(props.history.push('/'))
+  }
+
   return (
     <AppContext.Consumer>
       { ({
         points,
         answers,
-        maxCombo
+        maxCombo,
+        resetQuiz
       }) => (
         <div className="result">
           <h1 className="result__title">Resultado</h1>
@@ -96,13 +109,19 @@ const Result = props => {
           </div>
 
           <div className="result__options">
-            <div className="result__option-item">
+            <div className="result__option-item scale-0">
+              <button
+                onClick={onReset(resetQuiz)}
+                className="result__restart"
+              >
+                <Restart className="result__restart-icon" />
+              </button>
             </div>
 
-            <div className="result__option-item">
+            <div className="result__option-item scale-0">
               <a
                 className="result__twitter"
-                href={twitterUrl('Só vamo')}
+                href={twitterUrl(answers, points)}
                 target="blank"
               >
                 <Twitter className="result__twitter-icon" />
@@ -115,4 +134,4 @@ const Result = props => {
   )
 }
 
-export default Result
+export default withRouter(Result)

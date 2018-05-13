@@ -27,6 +27,11 @@
   animation-delay: 0.5;
 }
 
+.result__data {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
 .result__data-item {
   font-size: 3rem;
   color: #FFFFFF;
@@ -94,12 +99,56 @@
 .result__data .result__data-set:nth-of-type(3) .result__data-item { animation-delay: 2.4s; }
 .result__data .result__data-set:nth-of-type(3) .result__data-label { animation-delay: 2.5s; }
 
+.result__options .result__option-item:nth-of-type(1),
+.result__options .result__option-item:nth-of-type(2) {
+  animation: scaleIn 0.3s cubic-bezier(0.65, 0.05, 0.36, 1) forwards;
+  animation-delay: 2.8s;
+}
+
+.result__options {
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
+}
+
+.result__option-item {
+  margin-right: 25px;
+  margin-left: 25px;
+}
+
 .result__twitter-icon {
   width: 35px;
   height: 35px;
 }
 
+.result__restart {
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+
+.result__restart-icon {
+  width: 34px;
+  height: 31px;
+}
+
+.scale-0 {
+  transform: scale(0);
+}
+
 @keyframes scaleIn {
   from { transform: scale(0) }
   to { transform: scale(1) }
+}
+
+@media screen and (min-width: 961px) {
+  .result__data {
+    display: flex;
+    justify-content: center;
+  }
+
+  .result__data-set {
+    width: 200px;
+  }
 }
