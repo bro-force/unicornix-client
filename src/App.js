@@ -26,7 +26,7 @@ const initialState = {
   selectedAnswer: null,
   startTime: 0,
   time: 0,
-  quiz: [],
+  quiz: {},
   loadingQuiz: false,
   currentQuestionId: 0,
   answers: [],
@@ -43,7 +43,7 @@ class App extends Component {
   state = initialState
 
   get hasNextQuestion () {
-    return this.state.currentQuestionId < this.state.quiz.length - 1
+    return this.state.currentQuestionId < this.state.quiz.questions.length - 1
   }
 
   resetQuiz = (callback) => {
@@ -67,7 +67,7 @@ class App extends Component {
 
   selectAnswer = (option) => {
     const { answers } = this.state
-    const currentQuestion = this.state.quiz[this.state.currentQuestionId]
+    const currentQuestion = this.state.quiz.questions[this.state.currentQuestionId]
     const selectedAnswerEncrypted = encryptAnswer(option)
     const isCorrect = selectedAnswerEncrypted === currentQuestion.answer
 
@@ -76,6 +76,12 @@ class App extends Component {
       selectedAnswer: selectedAnswerEncrypted,
       answer: currentQuestion.answer
     }
+
+    api.saveAnswer({
+      quizId: this.state.quiz.id,
+      questionIndex: this.state.currentQuestionId,
+      selectedAnswer: option
+    })
 
     this.pause()
 
@@ -129,7 +135,7 @@ class App extends Component {
 
   start = (quiz) => {
     const estimatedReadingTime =
-      readingTime(quiz[0].comment) + (10 * second)
+      readingTime(quiz.questions[0].comment) + (10 * second)
 
     this.setState({
       started: true,
@@ -155,7 +161,7 @@ class App extends Component {
   }
 
   next = () => {
-    const nextQuestion = this.state.quiz[this.state.currentQuestionId + 1]
+    const nextQuestion = this.state.quiz.questions[this.state.currentQuestionId + 1]
     const estimatedReadingTime = readingTime(nextQuestion.comment) + (10 * second)
     const deviceWidth = getDeviceWidth()
 
@@ -222,6 +228,7 @@ class App extends Component {
         <Router
           started={this.state.started}
           finished={this.state.finished}
+          quiz={this.state.quiz}
         />
       </AppContext.Provider>
     )
