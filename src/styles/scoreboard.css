@@ -1,6 +1,5 @@
 .scoreboard {
   text-align: center;
-  margin-bottom: 20px;
   height: 130px;
   display: flex;
   flex-direction: column;
@@ -69,4 +68,10 @@
   color: #E1BEE7;
   text-transform: uppercase;
   font-family: 'Heebo', sans-serif;
+}
+
+@media screen and (min-width: 961px) {
+  .scoreboard {
+    margin-bottom: 20px;
+  }
 }
