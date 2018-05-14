@@ -11,7 +11,7 @@ const Home = props => {
       .then(quiz => {
         setTimeout(() => {
           context.start(quiz)
-          props.history.push('/quiz')
+          props.history.push(`/${quiz.id}/quiz`)
         }, 2000)
       })
   }

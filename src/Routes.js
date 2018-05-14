@@ -24,7 +24,7 @@ const Router = (props) => {
 
         <Route
           exact
-          path="/quiz"
+          path="/:quizId/quiz"
           render={() => {
             if (!props.started) {
               return (
@@ -36,7 +36,7 @@ const Router = (props) => {
               )
             } else {
               return (
-                <Redirect to="/result" />
+                <Redirect to={`/${props.quiz.id}/result`} />
               )
             }
           }}
@@ -44,7 +44,7 @@ const Router = (props) => {
 
         <Route
           exact
-          path="/result"
+          path="/:quizId/result"
           render={() => (
             props.finished
               ? <Result />

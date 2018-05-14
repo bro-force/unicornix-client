@@ -9,7 +9,7 @@ const Quiz = props => {
   return (
     <AppContext.Consumer>
       {(context) => {
-        const currentQuestion = context.quiz[context.currentQuestionId]
+        const currentQuestion = context.quiz.questions[context.currentQuestionId]
 
         return (
           <div className="quiz">
