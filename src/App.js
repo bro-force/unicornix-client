@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import faker from 'faker'
 
 import Router from './Routes'
 import AppContext from './AppContext.js'
@@ -36,18 +37,31 @@ const initialState = {
   combo: -1,
   maxCombo: 0,
   points: 0,
-  previousPoints: 0
+  previousPoints: 0,
+  nickname: faker.internet.userName(),
+  ranking: []
 }
 
 class App extends Component {
   state = initialState
 
+  componentDidMount () {
+    api.getRanking()
+      .then(ranking => this.setState({ ranking }))
+  }
+
   get hasNextQuestion () {
-    return this.state.currentQuestionId < this.state.quiz.questions.length - 1
+    const questions = this.state.quiz.questions || []
+    return this.state.currentQuestionId < questions.length - 1
   }
 
   resetQuiz = (callback) => {
-    this.setState(initialState, callback)
+    clearInterval(this.intervalId)
+    this.setState({
+      ...initialState,
+      ranking: this.state.ranking,
+      nickname: this.state.nickname
+    }, callback)
   }
 
   calculatePoints = (
@@ -130,7 +144,7 @@ class App extends Component {
       loadingQuiz: true
     })
 
-    return api.getQuiz()
+    return api.getQuiz({ nickname: this.state.nickname })
   }
 
   start = (quiz) => {
@@ -139,7 +153,7 @@ class App extends Component {
 
     this.setState({
       started: true,
-      loadingQuiz: true,
+      loadingQuiz: false,
       quiz,
       startTime: estimatedReadingTime,
       time: estimatedReadingTime,
@@ -191,7 +205,17 @@ class App extends Component {
   finish = () => {
     clearInterval(this.intervalId)
 
+    api.saveResult({
+      points: this.state.points,
+      maxCombo: this.state.maxCombo,
+      quizId: this.state.quiz.id
+    })
+
+    api.getRanking()
+      .then(ranking => this.setState({ ranking }))
+
     this.setState({
+      started: false,
       finished: true,
       time: 0
     })
@@ -214,6 +238,10 @@ class App extends Component {
     }
   }
 
+  onNameChange = event => {
+    this.setState({ nickname: event.target.value })
+  }
+
   render() {
     return (
       <AppContext.Provider
@@ -222,13 +250,15 @@ class App extends Component {
           start: this.start,
           selectAnswer: this.selectAnswer,
           fetchQuiz: this.fetchQuiz,
-          resetQuiz: this.resetQuiz
+          resetQuiz: this.resetQuiz,
+          onNameChange: this.onNameChange
         }}
       >
         <Router
           started={this.state.started}
           finished={this.state.finished}
           quiz={this.state.quiz}
+          reset={this.resetQuiz}
         />
       </AppContext.Provider>
     )

@@ -11,6 +11,7 @@ import {
 import Home from './Home'
 import Quiz from './Quiz'
 import Result from './Result'
+import Ranking from './Ranking'
 
 const Router = (props) => {
   return (
@@ -19,7 +20,7 @@ const Router = (props) => {
         <Route
           exact
           path="/"
-          component={withRouter(Home)}
+          component={Home}
         />
 
         <Route
@@ -50,6 +51,12 @@ const Router = (props) => {
               ? <Result />
               : <Redirect to="/" />
           )}
+        />
+
+        <Route
+          exact
+          path="/ranking"
+          component={Ranking}
         />
 
         <Route
