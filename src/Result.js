@@ -6,6 +6,7 @@ import Star from './icons/Star'
 import Twitter from './icons/Twitter'
 import Restart from './icons/Restart'
 import Podium from './icons/Podium'
+import Github from './icons/Github'
 
 import AppContext from './AppContext'
 
@@ -130,6 +131,19 @@ const Result = props => {
               >
                 <Podium className="result__restart-icon" />
               </button>
+            </div>
+
+            <div className="result__option-item scale-0">
+              <a
+                href="https://github.com/bro-force"
+                target="blank"
+              >
+                <button
+                  className="result__restart"
+                >
+                  <Github className="result__restart-icon" />
+                </button>
+              </a>
             </div>
 
             <div className="result__option-item scale-0">

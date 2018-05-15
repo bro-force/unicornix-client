@@ -5,6 +5,7 @@ import AppContext from './AppContext'
 import Unicorn from './icons/Unicorn'
 import LabeledInput from './LabeledInput'
 import Podium from './icons/Podium'
+import Github from './icons/Github'
 
 import './styles/home.css'
 
@@ -74,6 +75,17 @@ const Home = props => {
               <Podium className="result__restart-icon" />
             </button>
           </Link>
+
+          <a
+            href="https://github.com/bro-force"
+            target="blank"
+          >
+            <button
+              className="result__restart"
+            >
+              <Github className="result__restart-icon" />
+            </button>
+          </a>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import AppContext from './AppContext'
 
 import Medal from './icons/Medal'
 import Home from './icons/Home'
+import Github from './icons/Github'
 
 import './styles/ranking.css'
 
@@ -57,6 +58,19 @@ const Ranking = () => {
               <Home className="result__restart-icon" />
             </button>
           </Link>
+        </div>
+
+        <div className="result__option-item">
+          <a
+            href="https://github.com/bro-force"
+            target="blank"
+          >
+            <button
+              className="result__restart"
+            >
+              <Github className="result__restart-icon" />
+            </button>
+          </a>
         </div>
       </div>
     </div>
