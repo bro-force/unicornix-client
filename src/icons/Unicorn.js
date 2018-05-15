@@ -1,6 +1,6 @@
 import React from "react"
 
-import './styles/unicorn.css'
+import '../styles/unicorn.css'
 
 const Unicorn = props => (
   <svg

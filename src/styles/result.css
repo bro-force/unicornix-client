@@ -99,8 +99,9 @@
 .result__data .result__data-set:nth-of-type(3) .result__data-item { animation-delay: 2.4s; }
 .result__data .result__data-set:nth-of-type(3) .result__data-label { animation-delay: 2.5s; }
 
-.result__options .result__option-item:nth-of-type(1),
-.result__options .result__option-item:nth-of-type(2) {
+.result__options .result__option-item.scale-0:nth-of-type(1),
+.result__options .result__option-item.scale-0:nth-of-type(2),
+.result__options .result__option-item.scale-0:nth-of-type(3) {
   animation: scaleIn 0.3s cubic-bezier(0.65, 0.05, 0.36, 1) forwards;
   animation-delay: 2.8s;
 }

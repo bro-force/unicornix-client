@@ -1,0 +1,50 @@
+.ranking {
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Raleway', sans-serif;
+  color: #E1BEE7;
+  min-height: 100vh;
+}
+
+.ranking__data,
+.ranking__header {
+  text-align: center;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  text-transform: uppercase;
+  vertical-align: top;
+  line-height: 26px;
+  font-size: 1.3rem;
+}
+
+.ranking__data:nth-of-type(1) {
+  font-weight: bold;
+  text-align: center;
+  padding-left: 15px;
+}
+
+.ranking__title {
+  color: #FFFFFF;
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.ranking__medal {
+  float: right;
+  width: 25px;
+  height: 25px;
+}
+
+.ranking__podium {
+  margin: 0 auto;
+  width: 80px;
+  height: 80px;
+}

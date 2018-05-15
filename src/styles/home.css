@@ -50,6 +50,7 @@
   background: #edeae4;
   text-transform: uppercase;
   color: #3c3c3c;
+  outline: none;
 }
 
 .home__start.animate {

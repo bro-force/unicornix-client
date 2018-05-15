@@ -1,7 +1,10 @@
 import React from 'react'
+import { Link, withRouter } from 'react-router-dom'
 
 import AppContext from './AppContext'
-import Unicorn from './Unicorn'
+import Unicorn from './icons/Unicorn'
+import LabeledInput from './LabeledInput'
+import Podium from './icons/Podium'
 
 import './styles/home.css'
 
@@ -12,7 +15,7 @@ const Home = props => {
         setTimeout(() => {
           context.start(quiz)
           props.history.push(`/${quiz.id}/quiz`)
-        }, 2000)
+        }, 500)
       })
   }
 
@@ -40,21 +43,41 @@ const Home = props => {
             .join(' ')
 
           return (
-            <button
-              onClick={start(context)}
-              className={classes}
-            >
-              { !context.loadingQuiz && (
-                <span className="home__start-text">
-                  Começar
-                </span>
-              )}
-            </button>
+            <React.Fragment>
+              <LabeledInput
+                value={context.nickname}
+                onChange={context.onNameChange}
+              />
+
+              <button
+                onClick={start(context)}
+                className={classes}
+              >
+                { !context.loadingQuiz && (
+                  <span className="home__start-text">
+                    Começar
+                  </span>
+                )}
+              </button>
+            </React.Fragment>
           )
         }}
+
       </AppContext.Consumer>
+
+      <div className="result__options">
+        <div className="result__option-item">
+          <Link to="/ranking">
+            <button
+              className="result__restart"
+            >
+              <Podium className="result__restart-icon" />
+            </button>
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }
 
-export default Home
+export default withRouter(Home)

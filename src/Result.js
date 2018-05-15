@@ -1,10 +1,11 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 
-import Trophy from './Trophy'
-import Star from './Star'
-import Twitter from './Twitter'
-import Restart from './Restart'
+import Trophy from './icons/Trophy'
+import Star from './icons/Star'
+import Twitter from './icons/Twitter'
+import Restart from './icons/Restart'
+import Podium from './icons/Podium'
 
 import AppContext from './AppContext'
 
@@ -74,6 +75,10 @@ const Result = props => {
     resetQuiz(props.history.push('/'))
   }
 
+  const goToRanking = resetQuiz => () => {
+    resetQuiz(props.history.push('/ranking'))
+  }
+
   return (
     <AppContext.Consumer>
       { ({
@@ -115,6 +120,15 @@ const Result = props => {
                 className="result__restart"
               >
                 <Restart className="result__restart-icon" />
+              </button>
+            </div>
+
+            <div className="result__option-item scale-0">
+              <button
+                className="result__restart"
+                onClick={goToRanking(resetQuiz)}
+              >
+                <Podium className="result__restart-icon" />
               </button>
             </div>
 

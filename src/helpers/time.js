@@ -2,7 +2,7 @@ export const second = 1000
 
 export const minutes = time => time * 1000
 
-export const readingTime = (text, readingSpeed = 250) => {
+export const readingTime = (text, readingSpeed = 200) => {
   const words = text.split(' ').length
   const readingTime = words / readingSpeed
 
