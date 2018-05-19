@@ -10,17 +10,25 @@ import { iOSSafari } from './helpers/userAgent'
 const Quiz = props => {
   const { innerHeight } = window
 
-  const iosStyles = {
-    quizMain: {
-      height: iOSSafari ? `${0.7 * innerHeight}px` : 'auto',
-      minHeight: iOSSafari ? 0 : '70vh'
-    },
-    quizAnswers: {
-      position: iOSSafari ? 'absolute' : 'relative',
+  let iosStyles = {
+    quizMain: {},
+    quizAnswers: {},
+    quizBlockquote: {}
+  }
+
+  if (iOSSafari) {
+    iosStyles.quizMain = {
+      height: `${0.7 * innerHeight}px`,
+      minHeight: 0
+    }
+
+    iosStyles.quizAnswers = {
+      position: 'absolute',
       bottom: 0
-    },
-    quizBlockquote: {
-      marginTop: iOSSafari ? '5px' : '0'
+    }
+
+    iosStyles.quizBlockquote = {
+      marginTop: '5px'
     }
   }
 

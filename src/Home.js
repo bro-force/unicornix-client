@@ -31,7 +31,9 @@ const Home = props => {
 
       <div className="">
         <h1 className="home__title">Quem quer ser um Unicornix?</h1>
-        <h3 className="home__subtitle">O Quiz da famigerada planilha "Como é trabalhar em Startup?"</h3>
+        <h3 className="home__subtitle">
+          O Quiz da famigerada planilha <a href="https://medium.com/startup-da-real/como-%C3%A9-trabalhar-em-startups-f9577c5e3798" target="blank"> "Como é trabalhar em Startup?" </a>
+          </h3>
       </div>
 
       <AppContext.Consumer>

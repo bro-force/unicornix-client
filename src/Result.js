@@ -14,6 +14,8 @@ import './styles/result.css'
 
 
 class Result extends React.Component {
+  componentDidMount () {
+  }
   twitterUrl = (answers, points) => {
     const successes = this.countSuccesses(answers)
 

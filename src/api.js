@@ -10,7 +10,10 @@ const endpoints = {
 }
 
 export const getQuiz = (params = {}) => {
-  return axios.get(endpoints.quiz, { params })
+  return axios.get(endpoints.quiz, {
+    params,
+    crossDomain: true
+  })
     .then(response => response.data)
 }
 

@@ -10,6 +10,11 @@
   color: #E1BEE7;
 }
 
+.home a,
+.home a:visited {
+  color: #E1BEE7;
+}
+
 .home__logo-wrapper {
   margin-bottom: 50px;
   position: relative;

@@ -20,9 +20,13 @@ const identifiers = [ 'A', 'B', 'C', 'D' ]
 const Answers = props => {
   const { innerHeight } = window
 
-  const iosStyles = {
-    answer: {
-      height: iOSSafari ? `${0.15 * innerHeight}px`: '15vh',
+  let iosStyles = {
+    answer: {}
+  }
+
+  if (iOSSafari) {
+    iosStyles.answer = {
+      height: `${0.15 * innerHeight}px`
     }
   }
 
