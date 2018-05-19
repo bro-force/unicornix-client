@@ -5,7 +5,25 @@ import Answers from './Answers'
 import PointsPopup from './PointsPopup'
 import AppContext from './AppContext'
 
+import { iOSSafari } from './helpers/userAgent'
+
 const Quiz = props => {
+  const { innerHeight } = window
+
+  const iosStyles = {
+    quizMain: {
+      height: iOSSafari ? `${0.7 * innerHeight}px` : 'auto',
+      minHeight: iOSSafari ? 0 : '70vh'
+    },
+    quizAnswers: {
+      position: iOSSafari ? 'absolute' : 'relative',
+      bottom: 0
+    },
+    quizBlockquote: {
+      marginTop: iOSSafari ? '5px' : '0'
+    }
+  }
+
   return (
     <AppContext.Consumer>
       {(context) => {
@@ -13,21 +31,30 @@ const Quiz = props => {
 
         return (
           <div className="quiz">
-            <div className="quiz__main">
+            <div
+              className="quiz__main"
+              style={iosStyles.quizMain}
+            >
               <Scoreboard
                 time={context.time}
                 points={context.points}
                 previousPoints={context.previousPoints}
                 combo={context.combo}
               />
-              <blockquote className="quiz__quote">
+              <blockquote
+                className="quiz__quote"
+                style={iosStyles.quizBlockquote}
+              >
                 <p className="quiz__commentary">
                   { currentQuestion.comment }
                 </p>
               </blockquote>
             </div>
 
-            <div className="quiz__answers">
+            <div
+              className="quiz__answers"
+              style={iosStyles.quizAnswers}
+            >
               <PointsPopup
                 points={context.points}
                 previousPoints={context.previousPoints}

@@ -8,6 +8,7 @@ import {
 import Answer from './Answer'
 
 import { encryptAnswer } from './helpers/crypto'
+import { iOSSafari } from './helpers/userAgent'
 
 const animationConfig = {
   stiffness: 1000,
@@ -17,6 +18,14 @@ const animationConfig = {
 const identifiers = [ 'A', 'B', 'C', 'D' ]
 
 const Answers = props => {
+  const { innerHeight } = window
+
+  const iosStyles = {
+    answer: {
+      height: iOSSafari ? `${0.15 * innerHeight}px`: '15vh',
+    }
+  }
+
   const hasError = (answer) => {
     return (
       props.selectedAnswer !== null &&
@@ -65,7 +74,8 @@ const Answers = props => {
                   success={hasSuccess(alternative)}
                   style={{
                     transform: `scale(${style.scale})`,
-                    opacity: style.scale
+                    opacity: style.scale,
+                    ...iosStyles.answer
                   }}
                 />
               )
