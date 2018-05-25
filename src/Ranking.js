@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 
 import AppContext from './AppContext'
 
@@ -39,6 +40,9 @@ const Ranking = () => {
                     </td>
                     <td className="ranking__data">
                       { item.nickname }
+                      { item.createdAt && (
+                        <small className="ranking__date">{ moment(item.createdAt).format('DD/MM/YYYY') }</small>
+                      )}
                     </td>
                     <td className="ranking__data"> { item.points } </td>
                   </tr>
